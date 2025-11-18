@@ -21,13 +21,17 @@ const useSurveyStore = create(
         
         // Social Media Habits
         socialMediaPlatforms: [],
+        socialMediaPlatformsOther: '',
         timeSpentOnSocialMedia: '',
         followsTechContent: '',
         techUpdateSources: [],
+        techUpdateSourcesOther: '',
         
         // Mobile Phone Usage
         currentPhoneBrand: '',
+        currentPhoneBrandOther: '',
         topPhoneFunctions: [],
+        topPhoneFunctionsOther: '',
         phoneChangeFrequency: '',
         tecnoExperience: '',
         tecnoExperienceRating: '',
@@ -44,7 +48,9 @@ const useSurveyStore = create(
         // TECNO Campus Brand Ambassador Program
         interestedInAmbassador: '',
         ambassadorStrengths: [],
+        ambassadorStrengthsOther: '',
         ambassadorBenefits: [],
+        ambassadorBenefitsOther: '',
         name: '',
         contactNumber: '',
         socialMediaLink: '',
@@ -246,13 +252,17 @@ const useSurveyStore = create(
             
             // Social Media Habits
             socialMediaPlatforms: [],
+            socialMediaPlatformsOther: '',
             timeSpentOnSocialMedia: '',
             followsTechContent: '',
             techUpdateSources: [],
+            techUpdateSourcesOther: '',
             
             // Mobile Phone Usage
             currentPhoneBrand: '',
+            currentPhoneBrandOther: '',
             topPhoneFunctions: [],
+            topPhoneFunctionsOther: '',
             phoneChangeFrequency: '',
             tecnoExperience: '',
             tecnoExperienceRating: '',
@@ -269,7 +279,9 @@ const useSurveyStore = create(
             // TECNO Campus Brand Ambassador Program
             interestedInAmbassador: false,
             ambassadorStrengths: [],
+            ambassadorStrengthsOther: '',
             ambassadorBenefits: [],
+            ambassadorBenefitsOther: '',
             name: '',
             contactNumber: '',
             socialMediaLink: '',
