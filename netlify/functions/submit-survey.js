@@ -5,11 +5,23 @@ let pool;
 
 const getPool = () => {
   if (!pool) {
+    if (!process.env.DATABASE_URL) {
+      throw new Error('DATABASE_URL environment variable is not set');
+    }
+    
+    console.log('🔌 Connecting to database...');
     pool = new Pool({
       connectionString: process.env.DATABASE_URL,
       ssl: {
         rejectUnauthorized: false
-      }
+      },
+      connectionTimeoutMillis: 10000,
+      idleTimeoutMillis: 30000
+    });
+    
+    // Handle pool errors
+    pool.on('error', (err) => {
+      console.error('❌ Unexpected error on idle client', err);
     });
   }
   return pool;
@@ -287,6 +299,24 @@ exports.handler = async (event, context) => {
 
   } catch (error) {
     console.error('❌ Error submitting survey:', error);
+    console.error('Error stack:', error.stack);
+    console.error('Error details:', {
+      message: error.message,
+      code: error.code,
+      databaseUrl: process.env.DATABASE_URL ? 'Set' : 'Not set'
+    });
+    
+    // Return detailed error for debugging
+    const errorDetails = {
+      success: false,
+      error: 'Internal server error',
+      message: error.message,
+      ...(process.env.NODE_ENV === 'development' || !process.env.NETLIFY ? {
+        stack: error.stack,
+        code: error.code,
+        databaseUrlSet: !!process.env.DATABASE_URL
+      } : {})
+    };
     
     return {
       statusCode: 500,
@@ -294,11 +324,7 @@ exports.handler = async (event, context) => {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*'
       },
-      body: JSON.stringify({
-        success: false,
-        error: 'Internal server error',
-        details: process.env.NODE_ENV === 'development' ? error.message : 'An error occurred while saving your survey response'
-      })
+      body: JSON.stringify(errorDetails)
     };
   }
 };
