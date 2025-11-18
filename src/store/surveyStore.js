@@ -168,6 +168,37 @@ const useSurveyStore = create(
           
         } catch (error) {
           console.error('❌ Survey submission error:', error);
+          console.error('❌ Error details:', {
+            message: error.message,
+            code: error.code,
+            status: error.response?.status,
+            statusText: error.response?.statusText,
+            data: error.response?.data,
+            fullError: JSON.stringify(error.response?.data, null, 2)
+          });
+          
+          // Check if we got a response with error details
+          if (error.response?.data) {
+            const errorData = error.response.data;
+            console.error('❌ Server error response:', errorData);
+            
+            // Extract detailed error message if available
+            const errorMessage = errorData.message || errorData.error || errorData.details?.message || 'Internal server error';
+            const errorDetails = errorData.details || {};
+            
+            // Log detailed error information
+            if (errorData.databaseUrlSet !== undefined) {
+              console.error('⚠️ DATABASE_URL is', errorData.databaseUrlSet ? 'SET' : 'NOT SET');
+            }
+            
+            // Return detailed error
+            return { 
+              success: false, 
+              error: errorMessage,
+              details: errorDetails,
+              fullError: errorData
+            };
+          }
           
           // Check if it's a network error or backend unavailable
           const isNetworkError = error.code === 'ECONNREFUSED' || 
@@ -222,9 +253,18 @@ const useSurveyStore = create(
           }
           
           // Other errors (validation, server errors, etc.)
+          const errorMessage = error.response?.data?.error || 
+                               error.response?.data?.message || 
+                               error.message || 
+                               'Failed to submit survey to database';
+          
+          console.error('❌ Final error message:', errorMessage);
+          
           return { 
             success: false, 
-            error: error.response?.data?.error || error.message || 'Failed to submit survey to database'
+            error: errorMessage,
+            details: error.response?.data?.details || {},
+            status: error.response?.status
           };
         }
       },

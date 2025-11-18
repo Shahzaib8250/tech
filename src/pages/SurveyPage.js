@@ -116,7 +116,26 @@ const SurveyPage = () => {
         // Silently navigate to thank you page without showing alert
         navigate('/thank-you');
       } else {
-        alert(`Error submitting survey: ${result.error || 'Please try again.'}`);
+        // Show detailed error message
+        let errorMsg = `Error submitting survey: ${result.error || 'Please try again.'}`;
+        
+        // Add additional details if available
+        if (result.details) {
+          if (result.details.missingFields) {
+            errorMsg += `\n\nMissing fields: ${result.details.missingFields.join(', ')}`;
+          }
+          if (result.details.message) {
+            errorMsg += `\n\nDetails: ${result.details.message}`;
+          }
+        }
+        
+        // Check if DATABASE_URL is not set
+        if (result.fullError?.databaseUrlSet === false) {
+          errorMsg += '\n\n⚠️ Database connection not configured. Please contact support.';
+        }
+        
+        console.error('❌ Survey submission failed:', result);
+        alert(errorMsg);
       }
     } catch (error) {
       console.error('Survey submission error:', error);
