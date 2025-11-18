@@ -1,0 +1,532 @@
+/* Modern Form Components Design */
+
+/* Form Group - Spacious Layout */
+.form-group {
+  margin-bottom: var(--space-8);
+  position: relative;
+}
+
+/* Form Label - Clear and Prominent */
+.form-label {
+  display: block;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--tecno-blue);
+  margin-bottom: var(--space-4);
+  text-align: left;
+  line-height: var(--leading-snug);
+}
+
+/* Helper Text */
+.helper-text {
+  font-size: var(--font-size-sm);
+  color: var(--text-tertiary);
+  margin-top: var(--space-2);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--leading-relaxed);
+}
+
+/* Radio Button Styles - Modern Card Design */
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.radio-button {
+  background: var(--bg-primary);
+  border: 2px solid var(--border-medium);
+  color: var(--text-primary);
+  padding: var(--space-5) var(--space-6);
+  border-radius: var(--radius-xl);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  text-align: left;
+  min-height: 64px;
+  display: flex;
+  align-items: center;
+  position: relative;
+  box-shadow: var(--shadow-sm);
+}
+
+.radio-button:hover {
+  border-color: var(--primary-400);
+  background: var(--primary-50);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+.radio-button.selected {
+  background: var(--primary-50);
+  color: var(--tecno-blue);
+  font-weight: var(--font-weight-semibold);
+  border-color: var(--primary-500);
+  box-shadow: var(--shadow-lg);
+}
+
+.radio-button.selected::after {
+  content: '✓';
+  margin-left: auto;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--primary-600);
+}
+
+/* Checkbox Button Styles - Touch Friendly */
+.checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.checkbox-button {
+  background: var(--bg-primary);
+  border: 2px solid var(--border-medium);
+  color: var(--text-primary);
+  padding: var(--space-5) var(--space-6) var(--space-5) 4rem;
+  border-radius: var(--radius-xl);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  text-align: left;
+  position: relative;
+  min-height: 64px;
+  display: flex;
+  align-items: center;
+  box-shadow: var(--shadow-sm);
+}
+
+.checkbox-button::before {
+  content: '';
+  position: absolute;
+  left: var(--space-5);
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  border: 3px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  background: var(--bg-primary);
+  transition: all var(--transition-normal);
+  box-shadow: var(--shadow-sm);
+}
+
+.checkbox-button::after {
+  content: '✓';
+  position: absolute;
+  left: calc(var(--space-5) + 2px);
+  top: 50%;
+  transform: translateY(-50%) scale(0);
+  color: var(--text-inverse);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  transition: transform var(--transition-normal);
+}
+
+.checkbox-button:hover {
+  border-color: var(--primary-400);
+  background: var(--primary-50);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+.checkbox-button.selected {
+  border-color: var(--primary-500);
+  background: var(--primary-50);
+}
+
+.checkbox-button.selected::before {
+  background: var(--primary-500);
+  border-color: var(--primary-500);
+  box-shadow: var(--shadow-md);
+}
+
+.checkbox-button.selected::after {
+  transform: translateY(-50%) scale(1);
+}
+
+/* Dropdown Styles - Modern Select */
+.dropdown-select {
+  width: 100%;
+  padding: var(--space-5) var(--space-6);
+  border: 2px solid var(--border-medium);
+  border-radius: var(--radius-xl);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  font-family: inherit;
+  min-height: 64px;
+  box-shadow: var(--shadow-sm);
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right var(--space-4) center;
+  background-repeat: no-repeat;
+  background-size: 1.5em 1.5em;
+  padding-right: 3rem;
+}
+
+.dropdown-select:hover {
+  border-color: var(--primary-400);
+  background-color: var(--primary-50);
+  box-shadow: var(--shadow-md);
+}
+
+.dropdown-select:focus {
+  outline: none;
+  border-color: var(--primary-500);
+  background-color: var(--bg-primary);
+  box-shadow: 0 0 0 3px rgba(23, 24, 166, 0.1);
+}
+
+.dropdown-select option {
+  padding: var(--space-3);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+}
+
+.dropdown-select option:checked {
+  background-color: var(--primary-500);
+  color: var(--text-inverse);
+  font-weight: var(--font-weight-semibold);
+}
+
+/* Text Input Styles - Clean and Modern */
+.text-input {
+  width: 100%;
+  padding: var(--space-5) var(--space-6);
+  border: 2px solid var(--border-medium);
+  border-radius: var(--radius-xl);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: all var(--transition-normal);
+  min-height: 64px;
+  box-shadow: var(--shadow-sm);
+}
+
+.text-input:hover {
+  border-color: var(--primary-400);
+  background-color: var(--primary-50);
+  box-shadow: var(--shadow-md);
+}
+
+.text-input:focus {
+  outline: none;
+  border-color: var(--primary-500);
+  background-color: var(--bg-primary);
+  box-shadow: 0 0 0 3px rgba(23, 24, 166, 0.1);
+}
+
+.text-input::placeholder {
+  color: var(--text-tertiary);
+  font-weight: var(--font-weight-normal);
+}
+
+/* Textarea Styles - Spacious and Comfortable */
+.textarea-input {
+  width: 100%;
+  padding: var(--space-5) var(--space-6);
+  border: 2px solid var(--border-medium);
+  border-radius: var(--radius-xl);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  font-family: inherit;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: all var(--transition-normal);
+  resize: vertical;
+  min-height: 120px;
+  line-height: var(--leading-relaxed);
+  box-shadow: var(--shadow-sm);
+}
+
+.textarea-input:hover {
+  border-color: var(--primary-400);
+  background-color: var(--primary-50);
+  box-shadow: var(--shadow-md);
+}
+
+.textarea-input:focus {
+  outline: none;
+  border-color: var(--primary-500);
+  background-color: var(--bg-primary);
+  box-shadow: 0 0 0 3px rgba(23, 24, 166, 0.1);
+}
+
+.textarea-input::placeholder {
+  color: var(--text-tertiary);
+  font-weight: var(--font-weight-normal);
+}
+
+/* Ranking Component - Modern List Design */
+.ranking-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.ranking-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-5) var(--space-6);
+  border: 2px solid var(--border-medium);
+  border-radius: var(--radius-xl);
+  background: var(--bg-primary);
+  transition: all var(--transition-normal);
+  gap: var(--space-4);
+  box-shadow: var(--shadow-sm);
+}
+
+.ranking-item:hover {
+  border-color: var(--primary-400);
+  background: var(--primary-50);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+.ranking-option-text {
+  font-size: var(--font-size-base);
+  color: var(--text-primary);
+  font-weight: var(--font-weight-medium);
+  flex: 1;
+  line-height: var(--leading-relaxed);
+}
+
+.ranking-select {
+  padding: var(--space-3) var(--space-4);
+  border: 2px solid var(--primary-500);
+  border-radius: var(--radius-lg);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+  background: var(--primary-500);
+  color: var(--text-inverse);
+  cursor: pointer;
+  min-width: 80px;
+  text-align: center;
+  transition: all var(--transition-normal);
+  box-shadow: var(--shadow-sm);
+}
+
+.ranking-select:hover {
+  background: var(--primary-600);
+  border-color: var(--primary-600);
+  box-shadow: var(--shadow-md);
+}
+
+.ranking-select:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(23, 24, 166, 0.2);
+}
+
+/* Multi-dropdown - Modern Selection */
+.multi-dropdown-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  border: 2px solid var(--border-medium);
+  border-radius: var(--radius-xl);
+  padding: var(--space-4);
+  background: var(--bg-primary);
+  max-height: 400px;
+  overflow-y: auto;
+  box-shadow: var(--shadow-sm);
+}
+
+.multi-dropdown-option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  min-height: 56px;
+}
+
+.multi-dropdown-option:hover {
+  background: var(--primary-50);
+}
+
+.multi-dropdown-option:has(input:checked) {
+  background: var(--primary-100);
+  border: 1px solid var(--primary-300);
+}
+
+.multi-dropdown-checkbox {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: var(--primary-500);
+  flex-shrink: 0;
+}
+
+.multi-dropdown-label {
+  font-size: var(--font-size-base);
+  color: var(--text-primary);
+  cursor: pointer;
+  flex: 1;
+  font-weight: var(--font-weight-medium);
+  line-height: var(--leading-relaxed);
+}
+
+.other-field {
+  margin-top: var(--space-4);
+  border-color: var(--primary-500) !important;
+}
+
+/* Mobile Responsive - Optimized for Touch */
+@media (max-width: 768px) {
+  .form-group {
+    margin-bottom: var(--space-6);
+  }
+  
+  .form-label {
+    font-size: var(--font-size-base);
+  }
+  
+  .radio-button,
+  .checkbox-button {
+    padding: var(--space-4) var(--space-5);
+    font-size: var(--font-size-sm);
+    min-height: 56px;
+  }
+  
+  .checkbox-button {
+    padding-left: 3.5rem;
+  }
+  
+  .checkbox-button::before {
+    left: var(--space-4);
+    width: 20px;
+    height: 20px;
+  }
+  
+  .checkbox-button::after {
+    left: calc(var(--space-4) + 2px);
+  }
+  
+  .dropdown-select,
+  .text-input,
+  .textarea-input {
+    padding: var(--space-4) var(--space-5);
+    font-size: var(--font-size-sm);
+    min-height: 56px;
+  }
+  
+  .textarea-input {
+    min-height: 100px;
+  }
+  
+  .ranking-item {
+    padding: var(--space-4) var(--space-5);
+  }
+  
+  .ranking-option-text {
+    font-size: var(--font-size-sm);
+  }
+  
+  .ranking-select {
+    min-width: 70px;
+    padding: var(--space-2) var(--space-3);
+  }
+  
+  .multi-dropdown-container {
+    padding: var(--space-3);
+    max-height: 350px;
+  }
+  
+  .multi-dropdown-option {
+    padding: var(--space-3);
+  }
+  
+  .multi-dropdown-label {
+    font-size: var(--font-size-sm);
+  }
+}
+
+@media (max-width: 480px) {
+  .form-label {
+    font-size: var(--font-size-sm);
+  }
+  
+  .radio-button,
+  .checkbox-button,
+  .dropdown-select,
+  .text-input {
+    font-size: var(--font-size-sm);
+    padding: var(--space-3) var(--space-4);
+  }
+  
+  .checkbox-button {
+    padding-left: 3rem;
+  }
+  
+  .checkbox-button::before {
+    left: var(--space-3);
+    width: 18px;
+    height: 18px;
+  }
+  
+  .checkbox-button::after {
+    left: calc(var(--space-3) + 1px);
+  }
+  
+  .ranking-item {
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+  
+  .ranking-option-text {
+    font-size: var(--font-size-xs);
+    flex: 1 1 100%;
+  }
+  
+  .ranking-select {
+    flex: 1;
+  }
+}
+
+/* Scrollbar for multi-dropdown */
+.multi-dropdown-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.multi-dropdown-container::-webkit-scrollbar-track {
+  background: var(--gray-100);
+  border-radius: var(--radius-full);
+}
+
+.multi-dropdown-container::-webkit-scrollbar-thumb {
+  background: var(--primary-400);
+  border-radius: var(--radius-full);
+}
+
+.multi-dropdown-container::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-500);
+}
+
+/* Animation Classes */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.form-group {
+  animation: fadeInUp 0.4s ease-out;
+}

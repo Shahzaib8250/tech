@@ -1,0 +1,402 @@
+/* Modern Thank You Page Design */
+.thank-you-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  position: relative;
+  overflow: hidden;
+  background: var(--gradient-primary);
+}
+
+.thank-you-page::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(circle at 20% 80%, rgba(139, 92, 246, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255, 107, 53, 0.3) 0%, transparent 50%);
+  z-index: 1;
+}
+
+/* Main Container */
+.thank-you-container {
+  position: relative;
+  z-index: 20;
+  background: var(--bg-primary);
+  border-radius: var(--radius-3xl);
+  padding: var(--space-12);
+  text-align: center;
+  box-shadow: var(--shadow-2xl);
+  max-width: 700px;
+  width: 100%;
+  border: 1px solid var(--border-light);
+  overflow: hidden;
+}
+
+.thank-you-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: var(--gradient-primary);
+  border-radius: var(--radius-3xl) var(--radius-3xl) 0 0;
+}
+
+.thank-you-container::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: var(--gradient-primary);
+  border-radius: var(--radius-3xl);
+  z-index: -1;
+  opacity: 0.1;
+}
+
+/* Success Icon */
+.success-icon {
+  width: 120px;
+  height: 120px;
+  background: var(--gradient-primary);
+  color: var(--text-inverse);
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 60px;
+  font-weight: var(--font-weight-bold);
+  margin: 0 auto var(--space-8);
+  box-shadow: var(--shadow-glow);
+  position: relative;
+  animation: successPulse 2s ease-in-out infinite;
+}
+
+.success-icon::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: var(--radius-full);
+  background: var(--gradient-primary);
+  opacity: 0.3;
+  animation: successRing 2s ease-in-out infinite;
+}
+
+@keyframes successPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+@keyframes successRing {
+  0% { transform: scale(0.8); opacity: 0.3; }
+  100% { transform: scale(1.2); opacity: 0; }
+}
+
+/* Title */
+.thank-you-container h1 {
+  color: var(--tecno-blue);
+  font-size: var(--font-size-5xl);
+  font-weight: var(--font-weight-extrabold);
+  margin-bottom: var(--space-6);
+  line-height: var(--leading-tight);
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Message */
+.thank-you-message {
+  color: var(--text-secondary);
+  font-size: var(--font-size-xl);
+  line-height: var(--leading-relaxed);
+  margin-bottom: var(--space-8);
+  font-weight: var(--font-weight-medium);
+}
+
+/* Next Steps Section */
+.next-steps {
+  background: var(--gradient-soft);
+  border-radius: var(--radius-2xl);
+  padding: var(--space-8);
+  margin-bottom: var(--space-8);
+  text-align: left;
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-md);
+}
+
+.next-steps h3 {
+  color: var(--tecno-blue);
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--space-6);
+  text-align: center;
+  line-height: var(--leading-tight);
+}
+
+.next-steps ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: var(--space-4);
+}
+
+.next-steps li {
+  color: var(--text-secondary);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-medium);
+  padding-left: var(--space-10);
+  position: relative;
+  line-height: var(--leading-relaxed);
+  display: flex;
+  align-items: center;
+}
+
+.next-steps li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: var(--success);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  background: var(--success-light);
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-sm);
+}
+
+/* Action Button */
+.new-survey-button {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  background: var(--gradient-secondary);
+  color: var(--text-inverse);
+  border: none;
+  padding: var(--space-5) var(--space-8);
+  border-radius: var(--radius-xl);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  cursor: pointer;
+  box-shadow: var(--shadow-glow);
+  transition: all var(--transition-normal);
+  text-decoration: none;
+  min-height: 64px;
+  position: relative;
+  overflow: hidden;
+}
+
+.new-survey-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left var(--transition-slow);
+}
+
+.new-survey-button:hover::before {
+  left: 100%;
+}
+
+.new-survey-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 25px 50px rgba(255, 107, 53, 0.4);
+}
+
+.new-survey-button:active {
+  transform: translateY(-1px);
+}
+
+.new-survey-button-icon {
+  font-size: var(--font-size-2xl);
+  transition: transform var(--transition-normal);
+}
+
+.new-survey-button:hover .new-survey-button-icon {
+  transform: translateX(4px);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .thank-you-page {
+    padding: var(--space-3);
+  }
+  
+  .thank-you-container {
+    padding: var(--space-8);
+  }
+  
+  .success-icon {
+    width: 100px;
+    height: 100px;
+    font-size: 50px;
+    margin-bottom: var(--space-6);
+  }
+  
+  .thank-you-container h1 {
+    font-size: var(--font-size-4xl);
+  }
+  
+  .thank-you-message {
+    font-size: var(--font-size-lg);
+  }
+  
+  .next-steps {
+    padding: var(--space-6);
+  }
+  
+  .next-steps h3 {
+    font-size: var(--font-size-xl);
+  }
+  
+  .next-steps li {
+    font-size: var(--font-size-base);
+    padding-left: var(--space-8);
+  }
+  
+  .next-steps li::before {
+    width: 28px;
+    height: 28px;
+    font-size: var(--font-size-lg);
+  }
+  
+  .new-survey-button {
+    padding: var(--space-4) var(--space-6);
+    font-size: var(--font-size-lg);
+  }
+}
+
+@media (max-width: 480px) {
+  .thank-you-container {
+    padding: var(--space-6);
+  }
+  
+  .success-icon {
+    width: 80px;
+    height: 80px;
+    font-size: 40px;
+  }
+  
+  .thank-you-container h1 {
+    font-size: var(--font-size-3xl);
+  }
+  
+  .thank-you-message {
+    font-size: var(--font-size-base);
+  }
+  
+  .next-steps {
+    padding: var(--space-4);
+  }
+  
+  .next-steps h3 {
+    font-size: var(--font-size-lg);
+  }
+  
+  .next-steps li {
+    font-size: var(--font-size-sm);
+    padding-left: var(--space-7);
+  }
+  
+  .next-steps li::before {
+    width: 24px;
+    height: 24px;
+    font-size: var(--font-size-base);
+  }
+  
+  .new-survey-button {
+    padding: var(--space-4) var(--space-5);
+    font-size: var(--font-size-base);
+  }
+}
+
+/* Landscape Mobile */
+@media (max-height: 600px) and (orientation: landscape) {
+  .thank-you-container {
+    max-width: 90vw;
+    padding: var(--space-6);
+  }
+  
+  .success-icon {
+    width: 80px;
+    height: 80px;
+    font-size: 40px;
+    margin-bottom: var(--space-4);
+  }
+  
+  .thank-you-container h1 {
+    font-size: var(--font-size-3xl);
+    margin-bottom: var(--space-4);
+  }
+  
+  .thank-you-message {
+    margin-bottom: var(--space-6);
+  }
+  
+  .next-steps {
+    padding: var(--space-4);
+    margin-bottom: var(--space-6);
+  }
+  
+  .next-steps ul {
+    gap: var(--space-3);
+  }
+  
+  .next-steps li {
+    font-size: var(--font-size-sm);
+  }
+}
+
+/* Animation Classes */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.thank-you-container {
+  animation: fadeInUp 0.8s ease-out;
+}
+
+.success-icon {
+  animation: fadeInUp 1s ease-out 0.3s both;
+}
+
+.next-steps {
+  animation: fadeIn 1s ease-out 0.6s both;
+}
+
+.new-survey-button {
+  animation: fadeInUp 0.8s ease-out 0.9s both;
+}
