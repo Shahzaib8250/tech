@@ -10,18 +10,39 @@ const getPool = () => {
     }
     
     console.log('🔌 Connecting to database...');
+    console.log('📋 Connection string format:', process.env.DATABASE_URL ? 'Valid' : 'Missing');
+    
+    // Parse connection string to ensure proper SSL configuration for Neon
+    const connectionString = process.env.DATABASE_URL;
+    
     pool = new Pool({
-      connectionString: process.env.DATABASE_URL,
+      connectionString: connectionString,
       ssl: {
-        rejectUnauthorized: false
+        rejectUnauthorized: false,
+        require: true
       },
-      connectionTimeoutMillis: 10000,
-      idleTimeoutMillis: 30000
+      connectionTimeoutMillis: 15000, // Increased timeout for Neon
+      idleTimeoutMillis: 30000,
+      max: 20, // Maximum pool size
+      allowExitOnIdle: true
     });
     
     // Handle pool errors
     pool.on('error', (err) => {
       console.error('❌ Unexpected error on idle client', err);
+      console.error('❌ Error code:', err.code);
+      console.error('❌ Error message:', err.message);
+      // Reset pool on error to allow reconnection
+      pool = null;
+    });
+    
+    // Test connection
+    pool.query('SELECT NOW()', (err, result) => {
+      if (err) {
+        console.error('❌ Database connection test failed:', err);
+      } else {
+        console.log('✅ Database connection test successful');
+      }
     });
   }
   return pool;
@@ -92,8 +113,15 @@ const ensureTableExists = async () => {
 };
 
 exports.handler = async (event, context) => {
+  // Log function invocation
+  console.log('🚀 Function invoked');
+  console.log('📋 Event method:', event.httpMethod);
+  console.log('📋 Event path:', event.path);
+  console.log('📋 Event body type:', typeof event.body);
+  console.log('📋 DATABASE_URL set:', !!process.env.DATABASE_URL);
+  
   // Only accept POST requests
-  if (event.httpMethod !== 'POST') {
+  if (event.httpMethod !== 'POST' && event.httpMethod !== 'OPTIONS') {
     return {
       statusCode: 405,
       headers: {
@@ -123,13 +151,20 @@ exports.handler = async (event, context) => {
   }
 
   try {
+    console.log('✅ Starting survey submission process');
+    
     // Ensure table exists
+    console.log('📊 Ensuring table exists...');
     await ensureTableExists();
+    console.log('✅ Table check complete');
 
     // Parse request body
+    console.log('📦 Parsing request body...');
     let surveyData;
     try {
       surveyData = typeof event.body === 'string' ? JSON.parse(event.body) : event.body;
+      console.log('✅ Body parsed successfully');
+      console.log('📊 Survey data keys:', Object.keys(surveyData || {}));
     } catch (parseError) {
       return {
         statusCode: 400,
@@ -201,9 +236,12 @@ exports.handler = async (event, context) => {
     }
 
     // Get database connection pool
+    console.log('🔌 Getting database connection pool...');
     const pool = getPool();
+    console.log('✅ Pool obtained');
 
     // Insert survey data into database
+    console.log('💾 Preparing database insert...');
     const insertQuery = `
       INSERT INTO survey_responses (
         gender, age, province,
@@ -223,7 +261,7 @@ exports.handler = async (event, context) => {
         suggestions
       ) VALUES (
         $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17,
-        $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, $32
+        $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31
       ) RETURNING id, created_at;
     `;
 
@@ -234,49 +272,78 @@ exports.handler = async (event, context) => {
       surveyData.province || null,
       
       // Social Media Habits
-      JSON.stringify(surveyData.socialMediaPlatforms || []),
-      surveyData.socialMediaPlatformsOther || null,
+      Array.isArray(surveyData.socialMediaPlatforms) ? JSON.stringify(surveyData.socialMediaPlatforms) : JSON.stringify([]),
+      (surveyData.socialMediaPlatformsOther && surveyData.socialMediaPlatformsOther.trim()) ? surveyData.socialMediaPlatformsOther.trim() : null,
       surveyData.timeSpentOnSocialMedia || null,
       surveyData.followsTechContent || null,
-      JSON.stringify(surveyData.techUpdateSources || []),
-      surveyData.techUpdateSourcesOther || null,
+      Array.isArray(surveyData.techUpdateSources) ? JSON.stringify(surveyData.techUpdateSources) : JSON.stringify([]),
+      (surveyData.techUpdateSourcesOther && surveyData.techUpdateSourcesOther.trim()) ? surveyData.techUpdateSourcesOther.trim() : null,
       
       // Mobile Phone Usage
       surveyData.currentPhoneBrand || null,
-      surveyData.currentPhoneBrandOther || null,
-      JSON.stringify(surveyData.topPhoneFunctions || []),
-      surveyData.topPhoneFunctionsOther || null,
+      (surveyData.currentPhoneBrandOther && surveyData.currentPhoneBrandOther.trim()) ? surveyData.currentPhoneBrandOther.trim() : null,
+      Array.isArray(surveyData.topPhoneFunctions) ? JSON.stringify(surveyData.topPhoneFunctions) : JSON.stringify([]),
+      (surveyData.topPhoneFunctionsOther && surveyData.topPhoneFunctionsOther.trim()) ? surveyData.topPhoneFunctionsOther.trim() : null,
       surveyData.phoneChangeFrequency || null,
       surveyData.tecnoExperience || null,
       surveyData.tecnoExperienceRating || null,
       
       // Phone Preferences
-      JSON.stringify(surveyData.phoneFeaturesRanking || []),
+      Array.isArray(surveyData.phoneFeaturesRanking) ? JSON.stringify(surveyData.phoneFeaturesRanking) : 
+        (typeof surveyData.phoneFeaturesRanking === 'object' && surveyData.phoneFeaturesRanking !== null) ? 
+          JSON.stringify(surveyData.phoneFeaturesRanking) : JSON.stringify([]),
       surveyData.phoneBudget || null,
-      JSON.stringify(surveyData.preferredPhoneColors || []),
-      JSON.stringify(surveyData.preferredPhoneColorsSecondary || []),
+      Array.isArray(surveyData.preferredPhoneColors) ? JSON.stringify(surveyData.preferredPhoneColors) : JSON.stringify([]),
+      Array.isArray(surveyData.preferredPhoneColorsSecondary) ? JSON.stringify(surveyData.preferredPhoneColorsSecondary) : JSON.stringify([]),
       
       // Feature Ratings
-      JSON.stringify(surveyData.featureRatings || {}),
+      (typeof surveyData.featureRatings === 'object' && surveyData.featureRatings !== null) ? 
+        JSON.stringify(surveyData.featureRatings) : JSON.stringify({}),
       
       // TECNO Campus Brand Ambassador Program
       surveyData.interestedInAmbassador || null,
-      JSON.stringify(surveyData.ambassadorStrengths || []),
-      surveyData.ambassadorStrengthsOther || null,
-      JSON.stringify(surveyData.ambassadorBenefits || []),
-      surveyData.ambassadorBenefitsOther || null,
-      surveyData.name || null,
-      surveyData.contactNumber || null,
-      surveyData.socialMediaLink || null,
-      surveyData.followerCount || null,
+      Array.isArray(surveyData.ambassadorStrengths) ? JSON.stringify(surveyData.ambassadorStrengths) : JSON.stringify([]),
+      (surveyData.ambassadorStrengthsOther && surveyData.ambassadorStrengthsOther.trim()) ? surveyData.ambassadorStrengthsOther.trim() : null,
+      Array.isArray(surveyData.ambassadorBenefits) ? JSON.stringify(surveyData.ambassadorBenefits) : JSON.stringify([]),
+      (surveyData.ambassadorBenefitsOther && surveyData.ambassadorBenefitsOther.trim()) ? surveyData.ambassadorBenefitsOther.trim() : null,
+      (surveyData.name && surveyData.name.trim()) ? surveyData.name.trim() : null,
+      (surveyData.contactNumber && surveyData.contactNumber.trim()) ? surveyData.contactNumber.trim() : null,
+      (surveyData.socialMediaLink && surveyData.socialMediaLink.trim()) ? surveyData.socialMediaLink.trim() : null,
+      (surveyData.followerCount && surveyData.followerCount.trim()) ? surveyData.followerCount.trim() : null,
       
       // Suggestions
-      surveyData.suggestions || null
+      (surveyData.suggestions && surveyData.suggestions.trim()) ? surveyData.suggestions.trim() : null
     ];
 
-    const result = await pool.query(insertQuery, values);
+    console.log('📝 Executing database insert...');
+    console.log('📊 Values to insert:', values.map((v, i) => {
+      // Log value types and lengths for debugging
+      if (typeof v === 'string' && v.length > 100) {
+        return `$${i + 1}: [String, length: ${v.length}]`;
+      }
+      return `$${i + 1}: ${typeof v === 'object' ? JSON.stringify(v).substring(0, 100) : v}`;
+    }));
+    
+    let result;
+    try {
+      result = await pool.query(insertQuery, values);
+    } catch (queryError) {
+      console.error('❌ Database query error:', queryError);
+      console.error('❌ Query:', insertQuery);
+      console.error('❌ Error code:', queryError.code);
+      console.error('❌ Error detail:', queryError.detail);
+      console.error('❌ Error hint:', queryError.hint);
+      throw queryError;
+    }
+    
+    if (!result || !result.rows || result.rows.length === 0) {
+      throw new Error('Insert query did not return a result');
+    }
+    
     const insertedId = result.rows[0].id;
     const createdAt = result.rows[0].created_at;
+    console.log('✅ Data inserted successfully, ID:', insertedId);
+    console.log('✅ Created at:', createdAt);
 
     console.log(`✅ Survey response saved to database with ID: ${insertedId}`);
 
@@ -299,27 +366,54 @@ exports.handler = async (event, context) => {
 
   } catch (error) {
     console.error('❌ Error submitting survey:', error);
-    console.error('Error stack:', error.stack);
-    console.error('Error details:', {
+    console.error('❌ Error stack:', error.stack);
+    console.error('❌ Error details:', {
       message: error.message,
       code: error.code,
-      databaseUrl: process.env.DATABASE_URL ? 'Set' : 'Not set'
+      detail: error.detail,
+      hint: error.hint,
+      databaseUrl: process.env.DATABASE_URL ? 'Set (length: ' + process.env.DATABASE_URL.length + ')' : 'Not set'
     });
+    
+    // Check for specific database errors
+    let errorMessage = 'Internal server error';
+    let statusCode = 500;
+    
+    if (error.message && error.message.includes('DATABASE_URL')) {
+      errorMessage = 'Database connection not configured. Please set DATABASE_URL environment variable.';
+      statusCode = 500;
+    } else if (error.code === 'ECONNREFUSED' || error.code === 'ETIMEDOUT') {
+      errorMessage = 'Unable to connect to database. Please check your connection string.';
+      statusCode = 503;
+    } else if (error.code === '23505') { // Unique violation
+      errorMessage = 'This survey has already been submitted.';
+      statusCode = 409;
+    } else if (error.code === '42P01') { // Table doesn't exist
+      errorMessage = 'Database table not found. Please ensure the table is created.';
+      statusCode = 500;
+    } else if (error.code === '23502') { // Not null violation
+      errorMessage = 'Missing required fields. Please fill all required fields.';
+      statusCode = 400;
+    } else if (error.message) {
+      errorMessage = error.message;
+    }
     
     // Return detailed error for debugging
     const errorDetails = {
       success: false,
-      error: 'Internal server error',
+      error: errorMessage,
       message: error.message,
       ...(process.env.NODE_ENV === 'development' || !process.env.NETLIFY ? {
         stack: error.stack,
         code: error.code,
+        detail: error.detail,
+        hint: error.hint,
         databaseUrlSet: !!process.env.DATABASE_URL
       } : {})
     };
     
     return {
-      statusCode: 500,
+      statusCode: statusCode,
       headers: {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*'

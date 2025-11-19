@@ -11,33 +11,38 @@ This guide explains how to set up the PostgreSQL database connection for the TEC
 
 ### 1. Environment Variables
 
-The `.env` file has been created with your database connection URL. Make sure to:
+The `.env` file has been created with your database connection URL. The connection string is configured as:
 
-- Replace `****************` in the `.env` file with your actual database password
-- The `.env` file should contain:
-  ```
-  DATABASE_URL=postgresql://neondb_owner:YOUR_PASSWORD@ep-nameless-unit-a4ywv0ih-pooler.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
-  ```
+```
+DATABASE_URL=postgresql://neondb_owner:npg_j0Iyaf8ltPwC@ep-nameless-unit-a4ywv0ih-pooler.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
+```
+
+✅ **The `.env` file is already configured with your connection string and ready for local development.**
 
 ### 2. Netlify Environment Variables
 
-For production deployment on Netlify:
+**⚠️ IMPORTANT: For production deployment on Netlify, you MUST set the environment variable in the Netlify dashboard.**
 
-1. Go to your Netlify site dashboard
+1. Go to your Netlify site dashboard (https://app.netlify.com)
 2. Navigate to **Site settings** → **Environment variables**
 3. Add a new variable:
    - **Key**: `DATABASE_URL`
-   - **Value**: Your complete PostgreSQL connection string (same as in `.env`)
+   - **Value**: `postgresql://neondb_owner:npg_j0Iyaf8ltPwC@ep-nameless-unit-a4ywv0ih-pooler.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require`
+   - **Scopes**: Select **All scopes** (or at least **Production** and **Deploy previews**)
+4. **IMPORTANT**: After adding/updating the environment variable, you must **redeploy your site** for the changes to take effect.
 
 ### 3. Database Table Creation
 
-The database table will be created automatically when the first survey is submitted. However, you can also create it manually by running the SQL script:
+The database table will be created **automatically** when the first survey is submitted. The `submit-survey.js` function includes code to ensure the table exists before inserting data.
 
-```bash
-psql 'postgresql://neondb_owner:YOUR_PASSWORD@ep-nameless-unit-a4ywv0ih-pooler.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require' -f database-schema.sql
-```
+If you want to create it manually, you can:
 
-Or manually execute the SQL in `database-schema.sql` using your database client.
+1. Connect to your Neon database using their web console
+2. Execute the SQL script from `database-schema.sql`
+3. Or use a PostgreSQL client with the connection string:
+   ```bash
+   psql "postgresql://neondb_owner:npg_j0Iyaf8ltPwC@ep-nameless-unit-a4ywv0ih-pooler.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require" -f database-schema.sql
+   ```
 
 ### 4. Testing the Connection
 
